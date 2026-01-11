@@ -28,4 +28,29 @@ The system SHALL implement a Windows-style window interface with custom controls
 
 #### Scenario: Custom Title Bar
 - **WHEN** the application is displayed
-- **THEN** the system SHALL show
+- **THEN** the system SHALL show a custom Windows-style title bar
+- **AND** include a draggable region and window control buttons
+
+#### Scenario: Custom Scrollbars
+- **WHEN** content exceeds viewport
+- **THEN** the system SHALL display custom CSS Webkit scrollbars
+- **AND** style them to match the dark mode theme
+
+### Requirement: Internationalization
+The system SHALL support multiple languages and provide a mechanism for switching between them.
+
+#### Scenario: Language Selection
+- **WHEN** the user changes language settings
+- **THEN** the system SHALL update the interface to display the selected language
+- **AND** persist the language preference
+
+#### Scenario: Text Translation
+- **WHEN** rendering UI elements
+- **THEN** the system SHALL display text in the currently selected language
+- **AND** use translations from the translations.ts file
+
+### Requirement: Interaction Feedback
+The system SHALL provide clear and immediate feedback for user interactions and system operations.
+
+#### Scenario: Card Status Visualization
+- **
