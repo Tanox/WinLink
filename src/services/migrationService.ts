@@ -184,10 +184,10 @@ class MigrationService {
 
   /**
    * 暂停迁移
-   * @param appId 应用程序 ID
+   * @param _appId 应用程序 ID
    * @returns 是否暂停成功
    */
-  pauseMigration(appId: string): boolean {
+  pauseMigration(_appId: string): boolean {
     // 实际实现中，这里会暂停文件复制操作
     // 目前返回 false，表示暂不支持
     return false;
@@ -195,10 +195,10 @@ class MigrationService {
 
   /**
    * 恢复迁移
-   * @param appId 应用程序 ID
+   * @param _appId 应用程序 ID
    * @returns 是否恢复成功
    */
-  resumeMigration(appId: string): boolean {
+  resumeMigration(_appId: string): boolean {
     // 实际实现中，这里会恢复暂停的文件复制操作
     // 目前返回 false，表示暂不支持
     return false;
@@ -272,9 +272,7 @@ class MigrationService {
         ...app,
         status: AppStatus.READY,
         moveStep: MoveStep.IDLE,
-        targetPath: undefined,
-        progress: 0,
-        errorMessage: undefined
+        progress: 0
       };
 
       return {
@@ -345,12 +343,12 @@ class MigrationService {
 
   /**
    * 检查目标路径是否有效
-   * @param targetPath 目标路径
+   * @param _targetPath 目标路径
    * @param requiredSpace 需要的空间（字节）
    * @returns 检查结果
    */
   async checkTargetPath(
-    targetPath: string,
+    _targetPath: string,
     requiredSpace: number
   ): Promise<{ valid: boolean; error?: string; availableSpace?: number }> {
     // 实际实现中，这里会检查目标路径是否存在、权限是否足够、空间是否充足

@@ -80,34 +80,34 @@ export const TerminalLog: React.FC<TerminalLogProps> = ({ language = 'zh' }): JS
   };
 
   return (
-    <div className="flex flex-col h-64 border-t border-slate-700">
+    <div className="flex flex-col h-64 dark:border-t dark:border-slate-700 border-t border-slate-200">
       {/* 终端工具栏 */}
-      <div className="bg-slate-900 border-b border-slate-700 px-4 py-2 flex items-center justify-between">
+      <div className="dark:bg-slate-900 dark:border-b dark:border-slate-700 bg-slate-100 border-b border-slate-200 px-4 py-2 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <h3 className="text-sm font-semibold">{translate('terminal', language)}</h3>
           
           <div className="flex items-center gap-2">
             <button
-              className="text-xs px-2 py-1 rounded bg-slate-800 hover:bg-slate-700"
+              className="text-xs px-2 py-1 rounded dark:bg-slate-800 dark:hover:bg-slate-700 bg-slate-200 hover:bg-slate-300 dark:text-white text-slate-900"
               onClick={() => setShowFilters(!showFilters)}
             >
               {translate('filter', language)}
             </button>
             <button
-              className="text-xs px-2 py-1 rounded bg-slate-800 hover:bg-slate-700"
+              className="text-xs px-2 py-1 rounded dark:bg-slate-800 dark:hover:bg-slate-700 bg-slate-200 hover:bg-slate-300 dark:text-white text-slate-900"
               onClick={() => handleClearLogs()}
             >
               {translate('clear', language)}
             </button>
             <div className="flex items-center gap-1">
               <button
-                className="text-xs px-2 py-1 rounded bg-slate-800 hover:bg-slate-700"
+                className="text-xs px-2 py-1 rounded dark:bg-slate-800 dark:hover:bg-slate-700 bg-slate-200 hover:bg-slate-300 dark:text-white text-slate-900"
                 onClick={() => handleExportLogs('text')}
               >
                 {translate('export', language)} .txt
               </button>
               <button
-                className="text-xs px-2 py-1 rounded bg-slate-800 hover:bg-slate-700"
+                className="text-xs px-2 py-1 rounded dark:bg-slate-800 dark:hover:bg-slate-700 bg-slate-200 hover:bg-slate-300 dark:text-white text-slate-900"
                 onClick={() => handleExportLogs('json')}
               >
                 .json
@@ -120,7 +120,7 @@ export const TerminalLog: React.FC<TerminalLogProps> = ({ language = 'zh' }): JS
           <input
             type="text"
             placeholder={`${translate('search', language)}...`}
-            className="text-xs bg-slate-800 border border-slate-700 rounded px-2 py-1 text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="text-xs dark:bg-slate-800 dark:border dark:border-slate-700 bg-white border border-slate-300 dark:text-white text-slate-900 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-primary-500"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -129,7 +129,7 @@ export const TerminalLog: React.FC<TerminalLogProps> = ({ language = 'zh' }): JS
 
       {/* 过滤器 */}
       {showFilters && (
-        <div className="bg-slate-800 border-b border-slate-700 px-4 py-2 flex items-center gap-4 text-xs">
+        <div className="dark:bg-slate-800 dark:border-b dark:border-slate-700 bg-slate-100 border-b border-slate-200 px-4 py-2 flex items-center gap-4 text-xs">
           <span>{translate('filterByType', language)}:</span>
           <div className="flex items-center gap-2">
             {[
@@ -139,7 +139,7 @@ export const TerminalLog: React.FC<TerminalLogProps> = ({ language = 'zh' }): JS
               { type: 'error' as const, label: translate('danger', language) },
               { type: 'command' as const, label: 'Command' }
             ].map(({ type, label }) => (
-              <label key={type} className="flex items-center gap-1 cursor-pointer">
+              <label key={type} className="flex items-center gap-1 cursor-pointer dark:text-white text-slate-900">
                 <input
                   type="checkbox"
                   checked={selectedTypes.includes(type)}
@@ -154,17 +154,17 @@ export const TerminalLog: React.FC<TerminalLogProps> = ({ language = 'zh' }): JS
       )}
 
       {/* 终端内容 */}
-      <div className="flex-1 overflow-y-auto scrollbar-thin p-4" ref={terminalRef}>
+      <div className="flex-1 overflow-y-auto scrollbar-thin p-4 dark:bg-slate-900 bg-slate-50" ref={terminalRef}>
         <div className="space-y-1">
           {filteredLogs.length === 0 ? (
-            <div className="text-slate-500 text-sm">{translate('noLogsFound', language)}</div>
+            <div className="dark:text-slate-500 text-slate-400 text-sm">{translate('noLogsFound', language)}</div>
           ) : (
             filteredLogs.map((log) => (
               <div 
                 key={log.id} 
                 className={`terminal-log-entry ${getLogClass(log.type)}`}
               >
-                <span className="text-slate-500 mr-2">[{log.timestamp}]</span>
+                <span className="dark:text-slate-500 text-slate-400 mr-2">[{log.timestamp}]</span>
                 {log.type === 'command' ? (
                   <span className="mr-2">$</span>
                 ) : null}

@@ -229,10 +229,6 @@ const App: React.FC = (): JSX.Element => {
     themeService.setTheme(newTheme);
   };
 
-  const handleToggleTheme = (): void => {
-    themeService.toggleTheme();
-  };
-
   // 处理排序
   const handleSort = (newSortBy: 'name' | 'size' | 'status' | 'path'): void => {
     if (newSortBy === sortBy) {
@@ -267,47 +263,52 @@ const App: React.FC = (): JSX.Element => {
         <div className="flex items-center gap-2">
           <h1 className="text-lg font-semibold">WinLink Migrator</h1>
         </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-1 sm:gap-2">
             <button
-              className={`px-2 py-1 rounded ${activeLanguage === 'zh' ? 'bg-primary-600' : 'dark:bg-slate-700 bg-slate-200 dark:text-white text-slate-900'}`}
+              className={`px-2 py-1 rounded text-sm ${activeLanguage === 'zh' ? 'bg-primary-600' : 'dark:bg-slate-700 bg-slate-200 dark:text-white text-slate-900'}`}
               onClick={() => setActiveLanguage('zh')}
+              title="中文"
             >
-              中文
+              中
             </button>
             <button
-              className={`px-2 py-1 rounded ${activeLanguage === 'en' ? 'bg-primary-600' : 'dark:bg-slate-700 bg-slate-200 dark:text-white text-slate-900'}`}
+              className={`px-2 py-1 rounded text-sm ${activeLanguage === 'en' ? 'bg-primary-600' : 'dark:bg-slate-700 bg-slate-200 dark:text-white text-slate-900'}`}
               onClick={() => setActiveLanguage('en')}
+              title="English"
             >
-              English
+              En
             </button>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             <button
               className={`px-2 py-1 rounded ${theme === 'dark' ? 'bg-primary-600' : 'dark:bg-slate-700 bg-slate-200 dark:text-white text-slate-900'}`}
               onClick={() => handleThemeChange('dark')}
+              title="深色模式"
             >
               🌙
             </button>
             <button
               className={`px-2 py-1 rounded ${theme === 'light' ? 'bg-primary-600' : 'dark:bg-slate-700 bg-slate-200 dark:text-white text-slate-900'}`}
               onClick={() => handleThemeChange('light')}
+              title="浅色模式"
             >
               ☀️
             </button>
             <button
               className={`px-2 py-1 rounded ${theme === 'system' ? 'bg-primary-600' : 'dark:bg-slate-700 bg-slate-200 dark:text-white text-slate-900'}`}
               onClick={() => handleThemeChange('system')}
+              title="系统主题"
             >
               📱
             </button>
           </div>
           
           <div className="window-controls">
-            <button className="window-control window-control-minimize">_</button>
-            <button className="window-control window-control-maximize">□</button>
-            <button className="window-control window-control-close">×</button>
+            <button className="window-control window-control-minimize" title="最小化">_</button>
+            <button className="window-control window-control-maximize" title="最大化">□</button>
+            <button className="window-control window-control-close" title="关闭">×</button>
           </div>
         </div>
       </div>
@@ -385,7 +386,7 @@ const App: React.FC = (): JSX.Element => {
           </div>
 
           {/* 搜索、排序和批量操作 */}
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
+          <div className="flex flex-col gap-3 mb-6">
             <div className="flex-1">
               <input
                 type="text"
@@ -396,35 +397,38 @@ const App: React.FC = (): JSX.Element => {
               />
             </div>
             
-            <div className="flex items-center gap-2">
-              <span className="text-sm dark:text-white text-slate-900">{translate('sortBy', activeLanguage)}:</span>
-              <select
-                className="dark:bg-slate-800 dark:border dark:border-slate-700 bg-white border border-slate-300 dark:text-white text-slate-900 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                value={sortBy}
-                onChange={(e) => handleSort(e.target.value as 'name' | 'size' | 'status' | 'path')}
-              >
-                <option value="name">{translate('name', activeLanguage)}</option>
-                <option value="size">{translate('size', activeLanguage)}</option>
-                <option value="status">{translate('status', activeLanguage)}</option>
-                <option value="path">{translate('path', activeLanguage)}</option>
-              </select>
-              <button
-                className="dark:bg-slate-800 dark:border dark:border-slate-700 bg-white border border-slate-300 dark:text-white text-slate-900 rounded px-2 py-1"
-                onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-              >
-                {sortOrder === 'asc' ? '↑' : '↓'}
-              </button>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex items-center gap-2 flex-1">
+                <span className="text-sm dark:text-white text-slate-900 whitespace-nowrap">{translate('sortBy', activeLanguage)}:</span>
+                <select
+                  className="flex-1 dark:bg-slate-800 dark:border dark:border-slate-700 bg-white border border-slate-300 dark:text-white text-slate-900 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  value={sortBy}
+                  onChange={(e) => handleSort(e.target.value as 'name' | 'size' | 'status' | 'path')}
+                >
+                  <option value="name">{translate('name', activeLanguage)}</option>
+                  <option value="size">{translate('size', activeLanguage)}</option>
+                  <option value="status">{translate('status', activeLanguage)}</option>
+                  <option value="path">{translate('path', activeLanguage)}</option>
+                </select>
+                <button
+                  className="dark:bg-slate-800 dark:border dark:border-slate-700 bg-white border border-slate-300 dark:text-white text-slate-900 rounded px-2 py-1 whitespace-nowrap"
+                  onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
+                  title={sortOrder === 'asc' ? '切换为降序' : '切换为升序'}
+                >
+                  {sortOrder === 'asc' ? '↑' : '↓'}
+                </button>
+              </div>
+              
+              {selectedApps.length > 0 && (
+                <button
+                  className="btn btn-primary whitespace-nowrap"
+                  onClick={() => setShowMigrationModal(true)}
+                  disabled={isMigrating}
+                >
+                  {translate('migrate', activeLanguage)} ({selectedApps.length})
+                </button>
+              )}
             </div>
-            
-            {selectedApps.length > 0 && (
-              <button
-                className="btn btn-primary whitespace-nowrap"
-                onClick={() => setShowMigrationModal(true)}
-                disabled={isMigrating}
-              >
-                {translate('migrate', activeLanguage)} ({selectedApps.length})
-              </button>
-            )}
           </div>
 
           {/* 应用程序列表 */}
@@ -442,7 +446,7 @@ const App: React.FC = (): JSX.Element => {
                 <p>{translate('noAppsFound', activeLanguage)}</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {filteredAndSortedApps.map((app) => (
                   <div key={app.id} className="relative">
                     <div 
@@ -497,8 +501,8 @@ const App: React.FC = (): JSX.Element => {
 
       {/* 迁移配置模态框 */}
       {showMigrationModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-slate-900 border border-slate-700 rounded-lg p-6 max-w-md w-full">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="dark:bg-slate-900 dark:border dark:border-slate-700 bg-white border border-slate-200 rounded-lg p-6 max-w-md w-full sm:max-w-lg dark:text-white text-slate-900">
             <h3 className="text-xl font-semibold mb-4">{translate('migrationSettings', activeLanguage)}</h3>
             
             <div className="space-y-4 mb-6">

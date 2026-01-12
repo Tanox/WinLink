@@ -47,7 +47,7 @@ export const AppCard: React.FC<AppCardProps> = ({
     <div className={`app-card border ${getStatusColor(app.status)}`}>
       <div className="flex justify-between items-start mb-2">
         <h3 className="text-lg font-semibold">{app.name}</h3>
-        <span className="px-2 py-1 text-xs rounded-full bg-slate-800">
+        <span className="px-2 py-1 text-xs rounded-full dark:bg-slate-700 bg-slate-200 dark:text-white text-slate-900">
           {app.status}
         </span>
       </div>

@@ -111,7 +111,7 @@ class ThemeService {
     const themes: Theme[] = ['dark', 'light', 'system'];
     const currentIndex = themes.indexOf(this.currentTheme);
     const nextIndex = (currentIndex + 1) % themes.length;
-    this.setTheme(themes[nextIndex]);
+    this.setTheme(themes[nextIndex] as Theme);
   }
 
   /**
