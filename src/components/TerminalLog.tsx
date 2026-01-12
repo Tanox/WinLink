@@ -115,7 +115,7 @@ export const TerminalLog: React.FC<TerminalLogProps> = ({ language = 'zh' }): JS
         <div className="flex items-center gap-2">
           <input
             type="text"
-            placeholder={translate('search', language)}..."
+            placeholder={`${translate('search', language)}...`}
             className="text-xs bg-slate-800 border border-slate-700 rounded px-2 py-1 text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}

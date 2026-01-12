@@ -1,16 +1,5 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { AiAnalysisResult } from '../types';
 import { analysisHistoryService } from './analysisHistoryService';
-
-// 环境变量或配置文件中的 API 密钥
-const API_KEY = process.env.VITE_GOOGLE_API_KEY || '';
-
-// 创建 Google Generative AI 实例
-let genAI: any = null;
-
-if (API_KEY) {
-  genAI = new GoogleGenerativeAI(API_KEY);
-}
 
 /**
  * 分析应用程序文件夹的安全性
@@ -32,97 +21,23 @@ export const analyzeFolderSafety = async (
     }
   }
 
-  // 如果 API 密钥缺失，返回默认的中等风险结果
-  if (!genAI) {
-    const defaultResult: AiAnalysisResult = {
-      riskLevel: 'medium',
-      confidence: 0.7,
-      recommendations: [
-        '由于 API 密钥缺失，无法进行完整的 AI 分析',
-        '请确保应用程序文件夹不包含系统关键文件',
-        '在迁移前创建备份'
-      ],
-      warnings: [
-        '无法验证文件夹中是否包含硬编码路径',
-        '无法验证文件夹是否为系统服务'
-      ],
-      safeToMove: true
-    };
+  // 使用离线分析功能
+  const analysisResult = getOfflineAnalysis(folderPath, folderName);
 
-    // 保存到历史记录
-    analysisHistoryService.addAnalysis(folderPath, folderName, defaultResult, 60);
-    return defaultResult;
+  // 计算安全评分（0-100）
+  let safetyScore = 70; // 默认评分
+  if (analysisResult.riskLevel === 'low') {
+    safetyScore = 90;
+  } else if (analysisResult.riskLevel === 'medium') {
+    safetyScore = 60;
+  } else if (analysisResult.riskLevel === 'high') {
+    safetyScore = 30;
   }
 
-  try {
-    // 获取模型
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  // 保存到历史记录
+  analysisHistoryService.addAnalysis(folderPath, folderName, analysisResult, safetyScore);
 
-    // 构建提示
-    const prompt = `
-分析以下 Windows 应用程序文件夹是否适合迁移到其他分区并创建 Junction 链接：
-
-文件夹名称：${folderName}
-文件夹路径：${folderPath}
-
-请分析以下几点：
-1. 该文件夹是否可能包含硬编码路径？
-2. 该文件夹是否为系统服务或关键系统组件？
-3. 该文件夹迁移后是否可能影响应用程序的正常运行？
-4. 创建 Junction 链接是否适合该文件夹？
-
-请以 JSON 格式输出分析结果，包含以下字段：
-- riskLevel: 'low' | 'medium' | 'high'（风险等级）
-- confidence: number（置信度 0-1）
-- recommendations: string[]（建议采取的行动）
-- warnings: string[]（警告信息）
-- safeToMove: boolean（是否安全迁移）
-    `;
-
-    // 生成内容
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-
-    // 解析 JSON 响应
-    const analysisResult = JSON.parse(text) as AiAnalysisResult;
-
-    // 计算安全评分（0-100）
-    let safetyScore = 70; // 默认评分
-    if (analysisResult.riskLevel === 'low') {
-      safetyScore = 90;
-    } else if (analysisResult.riskLevel === 'medium') {
-      safetyScore = 60;
-    } else if (analysisResult.riskLevel === 'high') {
-      safetyScore = 30;
-    }
-
-    // 保存到历史记录
-    analysisHistoryService.addAnalysis(folderPath, folderName, analysisResult, safetyScore);
-
-    return analysisResult;
-  } catch (error) {
-    console.error('AI 分析失败:', error);
-    // 发生错误时返回默认的中等风险结果
-    const errorResult: AiAnalysisResult = {
-      riskLevel: 'medium',
-      confidence: 0.6,
-      recommendations: [
-        'AI 分析失败，建议谨慎操作',
-        '在迁移前创建备份',
-        '手动检查文件夹内容，确保不包含系统关键文件'
-      ],
-      warnings: [
-        'AI 分析过程中发生错误',
-        '无法验证文件夹的安全性'
-      ],
-      safeToMove: true
-    };
-
-    // 保存到历史记录
-    analysisHistoryService.addAnalysis(folderPath, folderName, errorResult, 50);
-    return errorResult;
-  }
+  return analysisResult;
 };
 
 /**

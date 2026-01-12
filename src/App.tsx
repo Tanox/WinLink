@@ -6,6 +6,7 @@ import { translate } from './translations';
 import { scanDisks, scanApplications, sortApplications, filterApplications } from './services/diskService';
 import { analyzeFolderSafety } from './services/geminiService';
 import { migrationService } from './services/migrationService';
+import { themeService, Theme } from './services/themeService';
 import { defaultMigrationConfig } from './constants';
 
 const App: React.FC = (): JSX.Element => {
@@ -14,6 +15,7 @@ const App: React.FC = (): JSX.Element => {
   const [selectedDisk, setSelectedDisk] = React.useState<string>('C:');
   const [targetDisk, setTargetDisk] = React.useState<string>('D:');
   const [activeLanguage, setActiveLanguage] = React.useState<'en' | 'zh'>('zh');
+  const [theme, setTheme] = React.useState<Theme>(themeService.getTheme());
   const [isScanning, setIsScanning] = React.useState<boolean>(false);
   const [scanProgress, setScanProgress] = React.useState<number>(0);
   const [sortBy, setSortBy] = React.useState<'name' | 'size' | 'status' | 'path'>('name');
@@ -24,6 +26,15 @@ const App: React.FC = (): JSX.Element => {
   const [migrationConfig, setMigrationConfig] = React.useState<MigrationConfig>(defaultMigrationConfig);
   const [selectedApps, setSelectedApps] = React.useState<string[]>([]);
   const [showMigrationModal, setShowMigrationModal] = React.useState<boolean>(false);
+
+  // 订阅主题变化
+  React.useEffect(() => {
+    const unsubscribe = themeService.subscribe((newTheme) => {
+      setTheme(newTheme);
+    });
+
+    return unsubscribe;
+  }, []);
 
   // 初始化时扫描磁盘
   React.useEffect(() => {
@@ -212,6 +223,14 @@ const App: React.FC = (): JSX.Element => {
     } catch (error) {
       console.error('回滚失败:', error);
     }
+  };
+
+  const handleThemeChange = (newTheme: Theme): void => {
+    themeService.setTheme(newTheme);
+  };
+
+  const handleToggleTheme = (): void => {
+    themeService.toggleTheme();
   };
 
   // 处理排序
@@ -452,7 +471,7 @@ const App: React.FC = (): JSX.Element => {
       </div>
 
       {/* 终端日志 */}
-      <TerminalLog />
+      <TerminalLog language={activeLanguage} />
 
       {/* 迁移配置模态框 */}
       {showMigrationModal && (
